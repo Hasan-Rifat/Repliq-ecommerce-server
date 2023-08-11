@@ -27,7 +27,7 @@ const loginUser = async (payload: {
   if (!passwordsMatch) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid credentials');
   }
-
+  // token
   const token = sign(email, config.jwt_secret as Secret);
 
   return {
