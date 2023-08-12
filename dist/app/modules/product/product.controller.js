@@ -27,16 +27,7 @@ const createProduct = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
             data: [],
         });
     }
-    const ProductData = Object.assign({ image: req.file ? req.file.path : null }, req.body);
-    if (!ProductData.image) {
-        return (0, sendResponse_1.default)(res, {
-            statusCode: http_status_1.default.BAD_REQUEST,
-            success: false,
-            message: 'Image not found in the request',
-            data: [],
-        });
-    }
-    const data = yield product_service_1.ProductService.createProduct(ProductData, authorizationHeader);
+    const data = yield product_service_1.ProductService.createProduct(req.body, authorizationHeader);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
