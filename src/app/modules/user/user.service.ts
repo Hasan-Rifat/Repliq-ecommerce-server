@@ -7,7 +7,6 @@ import jwt, { Secret } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { config } from '../../../config';
 import { IUser } from './user.interface';
-import { UpdateWriteOpResult } from 'mongoose';
 import verifyToken from '../../../shared/verifyToken';
 
 const loginUser = async (payload: {
@@ -92,27 +91,6 @@ const getSingleUser = async (email: string): Promise<IUser | null> => {
   return user;
 };
 
-/* const UpdateUser = async (
-  email: string,
-  payload: Partial<IUser>,
-  token: string,
-): Promise<UpdateWriteOpResult> => {
-  token = token.split(' ')[1];
-  if (verifyToken(token, config.jwt_secret as Secret)) {
-    // update user
-    const data = await User.updateOne(
-      { email },
-      {
-        $set: { ...payload },
-      },
-      { new: true },
-    );
-
-    return data;
-  } else {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid credentials');
-  }
-}; */
 const UpdateUser = async (
   email: string,
   payload: Partial<IUser>,
@@ -126,7 +104,6 @@ const UpdateUser = async (
 
     return data;
   } else {
-    console.log('Token verification failed');
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid credentials');
   }
 };
@@ -143,7 +120,7 @@ const DeleteUser = async (email: string, token: string) => {
   }
 };
 
-export const userService = {
+export const UserService = {
   createUser,
   loginUser,
   getAllUsers,

@@ -1,32 +1,30 @@
 import { Schema, model } from 'mongoose';
-import { IUser, UserModel } from './user.interface';
-import { role } from './user.constant';
-
-const userSchema = new Schema<IUser, UserModel>(
+import { IProduct, ProductModel } from './product.interface';
+const ProductSchema = new Schema<IProduct, ProductModel>(
   {
-    firstName: {
+    name: {
       type: String,
       required: true,
     },
-    lastName: {
+    description: {
       type: String,
       required: true,
     },
-    role: {
+    category: {
       type: String,
       required: true,
-      enum: role,
+    },
+    image: {
+      type: String,
+      required: true,
+    },
+    price: {
+      type: String,
+      required: true,
     },
     email: {
       type: String,
       required: true,
-    },
-    password: {
-      type: String,
-      required: true,
-    },
-    avatar: {
-      type: String,
     },
   },
   {
@@ -37,4 +35,4 @@ const userSchema = new Schema<IUser, UserModel>(
   },
 );
 
-export const User = model<IUser, UserModel>('User', userSchema);
+export const Product = model<IProduct, ProductModel>('Product', ProductSchema);

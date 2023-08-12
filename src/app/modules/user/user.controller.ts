@@ -2,12 +2,11 @@ import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import { IUser } from './user.interface';
-import { userService } from './user.service';
 import { Request, Response } from 'express';
-import { UpdateWriteOpResult } from 'mongoose';
+import { UserService } from './user.service';
 
 const loginUser = catchAsync(async (req: Request, res: Response) => {
-  const { user, token } = await userService.loginUser(req.body);
+  const { user, token } = await UserService.loginUser(req.body);
 
   sendResponse<IUser>(res, {
     statusCode: httpStatus.OK,
@@ -19,7 +18,7 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
-  const { data, token } = await userService.createUser(req.body);
+  const { data, token } = await UserService.createUser(req.body);
   sendResponse<IUser>(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -43,7 +42,7 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
     return;
   }
 
-  const users = await userService.getAllUsers(authorizationHeader);
+  const users = await UserService.getAllUsers(authorizationHeader);
   sendResponse<IUser[]>(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -52,8 +51,8 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getSingle = catchAsync(async (req: Request, res: Response) => {
-  const user = await userService.getSingleUser(req.params.email);
+const getSingleUser = catchAsync(async (req: Request, res: Response) => {
+  const user = await UserService.getSingleUser(req.params.email);
   sendResponse<IUser>(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -75,7 +74,7 @@ const UpdateUser = catchAsync(async (req: Request, res: Response) => {
     });
     return;
   }
-  const data = await userService.UpdateUser(
+  const data = await UserService.UpdateUser(
     req.params.email,
     req.body,
     authorizationHeader,
@@ -101,7 +100,7 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
     });
     return;
   }
-  const data = await userService.DeleteUser(
+  const data = await UserService.DeleteUser(
     req.params.email,
     authorizationHeader,
   );
@@ -113,11 +112,11 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const userController = {
+export const UserController = {
   createUser,
   loginUser,
   getAllUsers,
-  getSingle,
+  getSingleUser,
   UpdateUser,
   deleteUser,
 };

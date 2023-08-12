@@ -1,12 +1,12 @@
 import express from 'express';
-import { userController } from './user.controller';
+import { UserController } from './user.controller';
 const router = express.Router();
 
-router.get('/', userController.getAllUsers);
-router.post('/register', userController.createUser);
-router.post('/login', userController.loginUser);
-router.get('/:email', userController.getSingle);
-router.put('/:email', userController.UpdateUser);
-router.delete('/:email', userController.deleteUser);
+router.get('/', UserController.getAllUsers);
+router.post('/register', UserController.createUser);
+router.post('/login', UserController.loginUser);
+router.get('/:email', UserController.getSingleUser);
+router.put('/:email', UserController.UpdateUser);
+router.delete('/:email', UserController.deleteUser);
 
 export const userRouter = router;

@@ -30,7 +30,7 @@ const uploader = multer({
     if (support.test(extension)) {
       cb(null, true);
     } else {
-      cb(null, (new Error('File type not supported'), false));
+      cb(new Error('File type not supported'), false);
     }
   },
 
