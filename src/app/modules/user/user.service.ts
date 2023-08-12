@@ -92,19 +92,18 @@ const getSingleUser = async (email: string): Promise<IUser | null> => {
   return user;
 };
 
-const UpdateUser = async (
+/* const UpdateUser = async (
+  email: string,
   payload: Partial<IUser>,
   token: string,
 ): Promise<UpdateWriteOpResult> => {
   token = token.split(' ')[1];
   if (verifyToken(token, config.jwt_secret as Secret)) {
-    const { email, ...userData } = payload;
-
     // update user
     const data = await User.updateOne(
       { email },
       {
-        $set: userData,
+        $set: { ...payload },
       },
       { new: true },
     );
@@ -113,13 +112,28 @@ const UpdateUser = async (
   } else {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid credentials');
   }
+}; */
+const UpdateUser = async (
+  email: string,
+  payload: Partial<IUser>,
+  token: string,
+) => {
+  token = token.split(' ')[1];
+
+  if (verifyToken(token, config.jwt_secret as Secret)) {
+    // update user
+    const data = await User.findOneAndUpdate({ email }, payload, { new: true });
+
+    return data;
+  } else {
+    console.log('Token verification failed');
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid credentials');
+  }
 };
 
-const DeleteUser = async (payload: Partial<IUser>, token: string) => {
+const DeleteUser = async (email: string, token: string) => {
   token = token.split(' ')[1];
   if (verifyToken(token, config.jwt_secret as Secret)) {
-    const { email } = payload;
-
     // delete user
     const data = await User.deleteOne({ email });
 

@@ -75,8 +75,12 @@ const UpdateUser = catchAsync(async (req: Request, res: Response) => {
     });
     return;
   }
-  const data = await userService.UpdateUser(req.body, authorizationHeader);
-  sendResponse<UpdateWriteOpResult>(res, {
+  const data = await userService.UpdateUser(
+    req.params.email,
+    req.body,
+    authorizationHeader,
+  );
+  sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'update user successfully',
@@ -97,7 +101,10 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
     });
     return;
   }
-  const data = await userService.DeleteUser(req.body, authorizationHeader);
+  const data = await userService.DeleteUser(
+    req.params.email,
+    authorizationHeader,
+  );
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
