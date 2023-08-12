@@ -7,6 +7,8 @@ import jwt, { Secret } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { config } from '../../../config';
 import { IUser } from './user.interface';
+import { UpdateWriteOpResult } from 'mongoose';
+import verifyToken from '../../../shared/verifyToken';
 
 const loginUser = async (payload: {
   email: string;
@@ -42,7 +44,7 @@ const createUser = async (
   data: IUser;
   token: string;
 }> => {
-  const { email, firstName, lastName, password, avatar } = payload;
+  const { email, firstName, lastName, password, avatar, role } = payload;
 
   // Check if user with email already exists
   const userExists = await User.where({ email });
@@ -61,6 +63,7 @@ const createUser = async (
     firstName,
     lastName,
     avatar,
+    role,
     email,
     password: hashedPassword,
   });
@@ -74,7 +77,63 @@ const createUser = async (
   };
 };
 
+const getAllUsers = async (token: string): Promise<IUser[]> => {
+  token = token.split(' ')[1];
+
+  if (verifyToken(token, config.jwt_secret as Secret)) {
+    return await User.find();
+  } else {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid credentials');
+  }
+};
+
+const getSingleUser = async (email: string): Promise<IUser | null> => {
+  const user = User.findOne({ email });
+  return user;
+};
+
+const UpdateUser = async (
+  payload: Partial<IUser>,
+  token: string,
+): Promise<UpdateWriteOpResult> => {
+  token = token.split(' ')[1];
+  if (verifyToken(token, config.jwt_secret as Secret)) {
+    const { email, ...userData } = payload;
+
+    // update user
+    const data = await User.updateOne(
+      { email },
+      {
+        $set: userData,
+      },
+      { new: true },
+    );
+
+    return data;
+  } else {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid credentials');
+  }
+};
+
+const DeleteUser = async (payload: Partial<IUser>, token: string) => {
+  token = token.split(' ')[1];
+  if (verifyToken(token, config.jwt_secret as Secret)) {
+    const { email } = payload;
+
+    // delete user
+    const data = await User.deleteOne({ email });
+
+    return data;
+  } else {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid credentials');
+  }
+};
+
 export const userService = {
   createUser,
   loginUser,
+  getAllUsers,
+  getSingleUser,
+  UpdateUser,
+  DeleteUser,
 };
