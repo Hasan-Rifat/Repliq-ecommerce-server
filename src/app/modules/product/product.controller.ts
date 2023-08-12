@@ -16,22 +16,8 @@ const createProduct = catchAsync(async (req, res) => {
     });
   }
 
-  const ProductData = {
-    image: req.file ? req.file.path : null,
-    ...req.body,
-  };
-
-  if (!ProductData.image) {
-    return sendResponse<IProduct[]>(res, {
-      statusCode: httpStatus.BAD_REQUEST,
-      success: false,
-      message: 'Image not found in the request',
-      data: [],
-    });
-  }
-
   const data = await ProductService.createProduct(
-    ProductData,
+    req.body,
     authorizationHeader,
   );
 
