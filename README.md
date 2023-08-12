@@ -61,7 +61,7 @@ delete > delete product:- http://localhost:5000/api/v1/Order/64d7881da113f13230d
 
 ```
 
-## Features
+## technology
 
 - express
 - bcrypt
